@@ -24,6 +24,9 @@ void setup(void){
     // RCC Init
     RCC_Init();
 
+    // Enable ADC1 Clock explicitly in RCC APB2 peripheral clock register (ADC1 is bit 8)
+    SET_BIT(RCC_APB2ENR, 8);
+
     // Configure each switch LED pin: output
     GPIO_InitOutput_PA3();
     GPIO_InitOutput_PA4();
