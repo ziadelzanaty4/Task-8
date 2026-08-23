@@ -10,6 +10,9 @@
 #define SW2 7
 #define SW3 8
 
+unsigned int Read_ADC_Value();
+void Process_LED_Ranges(unsigned int adc_value);
+
 void setup(){
     // RCC_Init() turns on the clock for every peripheral at once, including GPIOA; without this, none of the writes below would reach the hardware's flip-flops
     RCC_Init();
@@ -28,22 +31,10 @@ void setup(){
     SET_BIT(GPIOA_MODER, 0);
     SET_BIT(GPIOA_MODER, 1);
 
-    //  Configure PA3 as General Purpose Output (MODER3 = 01)
-    SET_BIT(GPIOA_MODER,   6);
-    CLEAR_BIT(GPIOA_MODER, 7);
-
-    //  Configure PA4 as General Purpose Output (MODER4 = 01)
-    SET_BIT(GPIOA_MODER,   8);
-    CLEAR_BIT(GPIOA_MODER, 9);
-
-    //  Configure PA5 as General Purpose Output (MODER5 = 01)
-    SET_BIT(GPIOA_MODER,   10);
-    CLEAR_BIT(GPIOA_MODER, 11);
-
     //  Configure ADC Channel: Select Channel 0 (for PA0)
     ADC_SQR3 = 0; 
 
-    //  Enable ADC conversion (ADON = 1 in ADC_CR2)
+    // //  Enable ADC conversion (ADON = 1 in ADC_CR2)
     SET_BIT(ADC_CR2, 0);
 }
 

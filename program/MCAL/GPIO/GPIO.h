@@ -124,7 +124,7 @@ void GPIO_Write(unsigned int pin, unsigned int state){
     if (state) {
         SET_BIT(GPIOA_BSRR, pin);          // pin HIGH
     } else {
-        SET_BIT(GPIOA_BSRR, pin + 16);     // pin LOW
+        SET_BIT(GPIOA_BSRR, (pin + 16));     // pin LOW
     }
 }
 
