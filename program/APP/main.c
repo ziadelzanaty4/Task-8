@@ -1,8 +1,28 @@
 #include "../MCAL/RCC/RCC.h"
+#include "../MCAL/GPIO/GPIO.h"
+#include "./Memory_adresses.h"
+
+#define LED_RED   3
+#define LED_GREEN 4
+#define LED_BLUE  5
+
+#define SW1 6
+#define SW2 7
+#define SW3 8
 
 void setup(){
-    //  Open clocks for all peripherals at once
+    // RCC_Init() turns on the clock for every peripheral at once, including GPIOA; without this, none of the writes below would reach the hardware's flip-flops
     RCC_Init();
+
+    // configure each LED pin: output, push-pull, low speed, no pull
+    GPIO_InitOutput_PA3();
+    GPIO_InitOutput_PA4();
+    GPIO_InitOutput_PA5();
+
+    // configure each switch pin: input, pulled down
+    GPIO_InitInput_PA6();
+    GPIO_InitInput_PA7();
+    GPIO_InitInput_PA8();
 
     //  Configure PA0 as Analog Input for ADC (MODER0 = 11)
     SET_BIT(GPIOA_MODER, 0);
@@ -27,32 +47,25 @@ void setup(){
     SET_BIT(ADC_CR2, 0);
 }
 
-void loop() {
-    //  Read the current value from the ADC
-    unsigned int adc_val = Read_ADC_Value(); 
-    
-    //  Compare the value and turn ON the appropriate LEDs
-    Process_LED_Ranges(adc_val);             
+void loop(){
+  
+    // continuously read each switch's current state (0 or 1), and drive the matching LED to reflect it, live
+    GPIO_Write(LED_RED,   GPIO_Read(SW1));
+    GPIO_Write(LED_GREEN, GPIO_Read(SW2));
+    GPIO_Write(LED_BLUE,  GPIO_Read(SW3));
+     //  Read the current value from the ADC
+    unsigned int adc_val = Read_ADC_Value();
+      //  Compare the value and turn ON the appropriate LEDs
+    Process_LED_Ranges(adc_val); 
 }
 
-int main()
-{
-    setup();  // As you know, setup is called only once
-
-    while (1)
-    {
-        loop();   // Loop is called continuously so it's in the while(1)
-    }
-}
 
 // --- ADC Read Function ---
 unsigned int Read_ADC_Value() {
     // Start regular conversion (SWSTART = 1 in ADC_CR2, bit 30)
     SET_BIT(ADC_CR2, 30);
-
     // Wait for End of Conversion (EOC bit in ADC_SR, bit 1)
     while (!GET_BIT(ADC_SR, 1));
-
     // Return the converted data (12-bit value from 0 to 4095)
     return ADC_DR;
 }
@@ -79,5 +92,16 @@ void Process_LED_Ranges(unsigned int adc_value) {
         SET_BIT(GPIOA_ODR, 3);
         SET_BIT(GPIOA_ODR, 4);
         SET_BIT(GPIOA_ODR, 5);
+
     }
 }
+int main()
+{
+    setup();  // As you know, setup is called only once
+
+    while (1)
+    {
+        loop();   // Loop is called continuously so it's in the while(1)
+    }
+}
+  
