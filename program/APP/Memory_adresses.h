@@ -1,13 +1,6 @@
 #ifndef Memory_Adresses_H
 #define Memory_Adresses_H
 
-//GPIOA Base address
-#define GPIOA_BASE_ADD   0x40020000U
-//defining ADC analog input pin
-#define GPIOA_offset_ADD   0x00 //GPIOA OFFEST
-
-#define GPIOA_MODER     *((volatile unsigned int*)(GPIOA_offset_ADD + GPIOA_BASE_ADD)) 
-
 // defining main ADC phripherals 
 #define ADC_BASE_ADD    0x40012000U // ACD1 Base_address
 
