@@ -1,6 +1,11 @@
 #ifndef Memory_Adresses_H
 #define Memory_Adresses_H
 
+// --- RCC Peripherals (AHB/APB Bus Clocks) ---
+#define RCC_BASE_ADD       0x40023800U  // RCC Base Address for STM32F4
+#define RCC_APB2ENR_offset 0x44U        // APB2 peripheral clock enable register offset
+#define RCC_APB2ENR        *((volatile unsigned int*)(RCC_APB2ENR_offset + RCC_BASE_ADD))
+
 //GPIOA Base address
 #define GPIOA_BASE_ADD   0x40020000U
 //defining ADC analog input pin
